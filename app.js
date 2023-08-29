@@ -3,6 +3,10 @@ const app = express();
 const path = require('path');
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn');
+
+connectDB();
 
 const PORT = process.env.PORT || 3500;
 
@@ -17,6 +21,12 @@ app.use(logger);
 
 // error handler
 app.use(errorHandler);
+
+// content-type: application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+
+// for json data
+app.use(express.json());
 
 /*
 ================================================================================
@@ -41,4 +51,7 @@ app.all('*', (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+mongoose.connection.once('open', () => {
+  console.log('connected to mongodb');
+  app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+});
