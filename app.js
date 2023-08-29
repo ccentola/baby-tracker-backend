@@ -26,6 +26,8 @@ ROUTE REGISTRATION
 
 app.use('/', require('./routes/root'));
 
+app.use('/diapers', require('./routes/api/diapers'));
+
 // catchall
 app.all('*', (req, res) => {
   res.status(404);
